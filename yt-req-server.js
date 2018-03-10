@@ -14,6 +14,7 @@ var ytServer = http.createServer(function (request, response) {
             makeRequest({
                 id: queries.id,
                 part: 'snippet',
+                key: require('./environment').getYTKey(),
                 fields: 'items(id,snippet/thumbnails)'
             }, function(result) {
                 response.writeHead(200, {
