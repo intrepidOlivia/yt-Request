@@ -40,7 +40,7 @@ function retrieveVideoThumbnail(id) {
 function makeRequest(queries, callback) {
     
     let queryString = '/youtube/v3/videos?';
-    for (let i = 0; i < Object.keys(queries).length, i++)
+    for (let i = 0; i < Object.keys(queries).length; i++)
     {
         let key = Object.keys(queries)[i];
         let value = queries.key;
