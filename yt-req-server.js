@@ -7,7 +7,8 @@ var ytServer = http.createServer(function (request, response) {
     let reqUrl = url.parse(request.url, true);
     let path = reqUrl.pathname; //Retrieves the path after 138.68.243.184:8080
     let queries = reqUrl.query; //Retrieves an object containing the queries provided.
-
+    console.log(new Date().toUTCString() + '> Request received for ' + path);
+    
     switch (path) {
         case '/ytThumbnail':
         //TODO: Generalize the makeRequest function if I end up wanting to request other things from Youtube
@@ -23,7 +24,13 @@ var ytServer = http.createServer(function (request, response) {
                 response.write(result);
                 response.end();
             });
-        break;
+	break;
+    default:
+	response.writeHead(201, {
+	    'Access-Control-Allow-Origin': '*'
+	});
+	response.write('Server request could not be processed.');
+	response.end();
     }
 });
 ytServer.listen(8080, function() {
@@ -42,8 +49,8 @@ function makeRequest(queries, callback) {
     let queryString = '/youtube/v3/videos?';
     for (let i = 0; i < Object.keys(queries).length; i++)
     {
-        let key = Object.keys(queries)[i];
-        let value = queries.key;
+	let key = Object.keys(queries)[i];
+        let value = queries[key];
         queryString += key + "=" + value;
         if (i != Object.keys(queries).length - 1) {
             queryString += '&';
@@ -66,17 +73,15 @@ function makeRequest(queries, callback) {
                 result += chunk;
             });
             response.on('end', function() {
-                try {
-                    let objResult = JSON.parse(result);
-                    console.log(objResult);
-                    callback('Retrieval of thumbnail was successful.');
-                }
-                catch (e) {
-                    callback('The following error was encountered after receiving a successful result from Youtube: ' + e.message);
-                }
+		callback(result);
             });
         } else {
             callback('The following status code was received from Youtube: ' + response.statusCode);
         }
     });
+    request.on('error', function(err) {
+	callback('Request to Youtube received the following response: ' + err.message);
+    });
+    request.end();
+
 }
