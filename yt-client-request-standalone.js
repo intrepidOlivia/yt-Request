@@ -18,6 +18,8 @@ function handleRequestResponse() {
     if (this.status == 200) {
         let hqUrl = findHighestQuality(this.response);
         this.callback(hqUrl);   //The callback is triggered here, and the url is passed in.
+    } else {
+        throw new Exception("Error: thumbnail could not be located.");
     }
 }
 
