@@ -6,12 +6,11 @@ var ytServer = http.createServer(function (request, response) {
     let url = require('url');
     let reqUrl = url.parse(request.url, true);
     let path = reqUrl.pathname; //Retrieves the path after 138.68.243.184:8080
-    let queries = reqUrl.query; //Retrieves an object containing the queries provided.
-    console.log(new Date().toUTCString() + '> Request received for ' + path);
-    
+    let queries = reqUrl.query; //Retrieves an object containing the queries provided.    
     switch (path) {
         case '/ytThumbnail':
         //TODO: Generalize the makeRequest function if I end up wanting to request other things from Youtube
+        console.log(new Date().toUTCString() + '> Request received for ' + path);
             makeRequest({
                 id: queries.id,
                 part: 'snippet',
